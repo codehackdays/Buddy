@@ -52,6 +52,9 @@ def ping():
 def postText(textBody):
     return smooch.MessagePost(role='appMaker', type='text', text=textBody)
 
+def postImage(image):
+    return smooch.MessagePost(role='appMaker', type='image', mediaURL=image)
+
 def parse_request_data(request_data):
     body = json.loads(request_data)
 
@@ -59,7 +62,8 @@ def parse_request_data(request_data):
     user_id = body['appUser']['_id']
 
     # Generate api response
-    api_response = api_instance.post_message(APP_ID, user_id, postTextWithActions("Hi mate"))
+    api_response = api_instance.post_message(APP_ID, user_id, postText("Hi mate"))
+#    api_response = api_instance.post_message(APP_ID, user_id, postImage("http://www.truthandcharityforum.org/wp-content/uploads/2015/06/bible.jpg"))
 
 @app.route('/messages', methods=["POST"])
 def handle_messages():
