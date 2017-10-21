@@ -2,12 +2,13 @@ version: '3'
 services:
   web:
     build: .
-    # command: bash -c "./app.sh"
+    command: flask run -h 0.0.0.0
     ports:
     - "5000:5000"
     environment:
-      AWS_ACCESS_KEY_ID: AKIAJPMK7AM435FHNTBQ
-      AWS_SECRET_ACCESS_KEY: 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
-      AWS_DEFAULT_REGION: us-east-1
-      AWS_ACCOUNT_ID: 1710-2568-7704
+      FLASK_APP: app
+      FLASK_DEBUG: 1
+      PYTHONPATH: .
     volumes: ['.:/usr/src/app']
+  redis:
+    image: "redis:alpine"
