@@ -102,3 +102,4 @@ ENV/
 
 # Python
 env-vars.json
+env-vars.py

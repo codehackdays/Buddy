@@ -49,18 +49,17 @@ def ping():
     count = redis.incr('hits')
     return 'Hello World! I have been seen {} times.\n'.format(count)
 
+def postText(textBody):
+    return smooch.MessagePost(role='appMaker', type='text', text=textBody)
 
 def parse_request_data(request_data):
     body = json.loads(request_data)
 
     # print(body['appUser'])
     user_id = body['appUser']['_id']
-    
-    message_body_response = smooch.MessagePost(role='appMaker', type='text', text="Hello my friend!")
 
     # Generate api response
-    # try:
-    api_response = api_instance.post_message(APP_ID, user_id, message_body_response)
+    api_response = api_instance.post_message(APP_ID, user_id, postTextWithActions("Hi mate"))
 
 @app.route('/messages', methods=["POST"])
 def handle_messages():
