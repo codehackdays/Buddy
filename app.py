@@ -49,14 +49,23 @@ def ping():
     count = redis.incr('hits')
     return 'Hello World! I have been seen {} times.\n'.format(count)
 
-def postText(textBody):
-    return smooch.MessagePost(role='appMaker', type='text', text=textBody)
+def postText(body):
+    return smooch.MessagePost(role='appMaker', type='text', text=body)
 
 def postImage(uri):
-    return smooch.MessagePost(role='appMaker', type='image', mediaURL=uri)
+    return smooch.MessagePost(role='appMaker', type='image', mediaUrl=uri)
 
 def postFile(uri):
-    return smooch.MessagePost(role='appMaker', type='file', mediaURL=uri)
+    return smooch.MessagePost(role='appMaker', type='file', mediaUrl=uri)
+
+def postLocation(mapLat, mapLong):
+    return smooch.MessagePost(role='appMaker', type='location', lat=mapLat, long=mapLong)
+
+def postCarousel(body):
+    return smooch.MessagePost(role='appMaker', type='carousel', items=body)
+
+def postList(body):
+    return smooch.MessagePost(role='appMaker', type='list', items=body)
 
 def parse_request_data(request_data):
     body = json.loads(request_data)
