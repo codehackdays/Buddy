@@ -135,7 +135,7 @@ def handle_message(user_id, text):
 
     elif text == "Talk":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Are you happy to share your no?"))
+            postText("https://capuk.org/connect/contact-us"))
 
     elif text == "Hello" or text == "Hey" or text == "Hi":
         api_response = api_instance.post_message(APP_ID, user_id,
@@ -165,11 +165,11 @@ def handle_message(user_id, text):
 
     elif text == "Budgeting":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postTextWithReplies("What kind of budgeting have you done?", ['Regular Budget', 'Weekly Allowance Budget']))
+            postTextWithReplies("Are you happy to tell me about your budget?", ['Regular Budget', 'Weekly Allowance Budget']))
 
     elif text == "Spending":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postTextWithReplies("What kind of spending have you done?", ['Regular Spend', 'Weekly Allowance Spend']))
+            postTextWithReplies("Are you happy to tell me about your savings?", ['Regular Spend', 'Weekly Allowance Spend']))
 
     ### BUDGET ###
     elif text == "Regular Budget":
@@ -188,6 +188,14 @@ def handle_message(user_id, text):
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Got it! How much?"))
 
+    elif text == "Yes please":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postCarousel(['Budgeting', 'Spending', 'Talk']))
+
+    elif text == "I'm ok":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText(":)"))
+
     ### RACHEL ###
     elif text == "Rachel":
         api_response = api_instance.post_message(APP_ID, user_id,
@@ -204,7 +212,7 @@ def handle_message(user_id, text):
 
     elif text == ":(":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("You're not alone!"))
+            postTextWithReplies("You're not alone! I'm your budget buddy. I can help you cope better.", ['Yes please', 'I\'m ok']))
 
     elif text == ":@":
         api_response = api_instance.post_message(APP_ID, user_id,
