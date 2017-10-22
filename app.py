@@ -181,11 +181,11 @@ def handle_message(user_id, text):
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Ok, how much is your weekly allowance budget?"))
 
-    elif text == "Regular Spend":
+    elif text == "Weekly Allowance Spend":
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Got it! How much did you spend?"))
 
-    elif text == "Weekly Allowance Spend":
+    elif text == "Regular Spend":
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Got it! What did you spend money on?"))
         api_response = api_instance.post_message(APP_ID, user_id,
