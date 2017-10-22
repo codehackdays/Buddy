@@ -49,8 +49,8 @@ app_create_body = smooch.AppCreate() # AppCreate | Body for a createApp request.
 
 # IMAGES
 def image(text):
-    if text == "Christmas":
-        return "http://img.ehowcdn.com/615x200/ehow/images/a06/11/et/small-christmas-gift-ideas-boyfriend-1.1-800x800.jpg"
+    if text == "Bible":
+        return "http://static7.bigstockphoto.com/thumbs/8/1/3/small2/318707.jpg"
     elif text == "Easter":
         return "http://www.beliefnet.com/columnists//deaconsbench/files/import/assets_c/2010/04/jesus-cross-thumb-400x528-12594.jpg"
     elif text == "Budgeting":
@@ -128,69 +128,72 @@ def postList(list):
     message.items = items
     return message
 
+def handle_message(user_id, text):
+    if text == "Help":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Just say Hi, we can talk about Jesus or Money."))
+
+    elif text == "Talk":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Are you happy to share your no?"))
+
+    elif text == "Hello" or text == "Hey" or text == "Hi":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postTextWithReplies("What do you want to chat about?", ['Jesus', 'Money', 'Rachel']))
+
+    ### JESUS ###
+    elif text == "Jesus":
+        api_response = api_instance.post_message(APP_ID, user_id,
+        postCarousel(['Bible', 'Easter', 'Talk']))
+
+    elif text == "Bible":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("https://www.desiringgod.org/articles/how-to-read-the-bible-for-yourself"))
+
+    elif text == "Easter":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("http://www.st-helens.org.uk/internationals/who-is-jesus"))
+
+    ### MONEY ###
+    elif text == "Money":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postCarousel(['Budgeting', 'Spending', 'Talk']))
+
+    elif text == "Budgeting":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Are you happy to give your no?"))
+
+    elif text == "Spending":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Are you happy to give your no?"))
+
+    ### RACHEL ###
+    elif text == "Rachel":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
+
+    elif text == "":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Speachless"))
+
+    else:
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("I haven't learned that one yet"))
+
 # Request handling logic
 def parse_request_data(request_data):
     body = json.loads(request_data)
 
     user_id = body['appUser']['_id']
 
-    for message in body['messages']:
-        text = message['text']
+    if body['trigger'] == 'message:appUser':
+        for message in body['messages']:
+            handle_message(user_id, message['text'])
 
-        if text == "Help":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Just say Hi, we can talk about Jesus or Money."))
+    elif body['trigger'] == 'postback':
+        for postback in body['postbacks']:
+            handle_message(user_id, postback['action']['text'])
 
-        elif text == "Hello" or text == "Hey" or text == "Hi":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postTextWithReplies("What do you want to chat about?", ['Jesus', 'Money', 'Rachel']))
-
-        ### JESUS ###
-        elif text == "Jesus":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postCarousel(['Christmas', 'Easter', 'Talk']))
-
-        elif text == "Christmas":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Are you happy to give your no?"))
-
-        elif text == "Easter":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Are you happy to give your no?"))
-
-        elif text == "Talk":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Are you happy to give your no?"))
-
-        ### MONEY ###
-        elif text == "Money":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postCarousel(['Budgeting', 'Spending', 'Talk']))
-
-        elif text == "Budgeting":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Are you happy to give your no?"))
-
-        elif text == "Spending":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Are you happy to give your no?"))
-
-        elif text == "Talk":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Are you happy to give your no?"))
-
-        ### RACHEL ###
-        elif text == "Rachel":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
-
-        elif text == "":
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("Speachless"))
-
-        else:
-            api_response = api_instance.post_message(APP_ID, user_id,
-                postText("I haven't learned that one yet"))
     '''
     # Persist message to database
     author_id = body['messages'][0]['authorId']
