@@ -46,6 +46,22 @@ app_create_body = smooch.AppCreate() # AppCreate | Body for a createApp request.
 
 ### Health Checks
 
+
+# IMAGES
+def image(text):
+    if text == "Christmas":
+        return "http://img.ehowcdn.com/615x200/ehow/images/a06/11/et/small-christmas-gift-ideas-boyfriend-1.1-800x800.jpg"
+    elif text == "Easter":
+        return "http://www.beliefnet.com/columnists//deaconsbench/files/import/assets_c/2010/04/jesus-cross-thumb-400x528-12594.jpg"
+    elif text == "Budgeting":
+        return "https://www.aiadallas.org/media/uploads/event-images/budget_thumbnail.png"
+    elif text == "Spending":
+        return "http://thumbnails.billiondigital.com/297/151/1151297/1151253_small_checkboard.jpg"
+    elif text == "Talk":
+        return "https://rfclipart.com/image/thumbnail/22-f6-00/small-coffee-cup-Download-Free-Vector-File-EPS-677.jpg"
+    else:
+        return ""
+
 # PING
 @app.route('/')
 def ping():
@@ -91,6 +107,8 @@ def postCarousel(list):
         actions.append(smooch.Action(type='postback', text=item, payload=item))
 
         part = smooch.MessageItem(title=item, actions=actions)
+        part.media_url = image(item)
+        part.size = 'compact'
         items.append(part)
 
     message.items = items
