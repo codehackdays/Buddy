@@ -49,16 +49,19 @@ def ping():
     count = redis.incr('hits')
     return 'Hello World! I have been seen {} times.\n'.format(count)
 
-def postText(body):
+def postText(text):
     message = smooch.MessagePost(role='appMaker', type='text')
-    message.text = body
+    message.text = text
+
+    return message
+
+def postTextWithReplies(text, replies):
+    message = smooch.MessagePost(role='appMaker', type='text')
+    message.text = text
 
     actions = []
-    action = smooch.Action()
-    action.type = 'reply'
-    action.text = 'Click'
-    action.payload = 'Thanks'
-    actions.append(action)
+    for reply in replies:
+        actions.append(smooch.Action(type='reply', text=reply, payload=reply))
 
     message.actions = actions
     return message
@@ -66,43 +69,39 @@ def postText(body):
 def postImage(uri):
     message = smooch.MessagePost(role='appMaker', type='image')
     message.media_url = uri
+
     return message
 
 def postFile(uri):
     message = smooch.MessagePost(role='appMaker', type='file')
     message.media_url = uri
+
     return message
 
-def postCarousel(list):
+def postCarousel(list, replies):
     message = smooch.MessagePost(role='appMaker', type='carousel')
 
     actions = []
-    action = smooch.Action()
-    action.type = 'postback'
-    action.text = 'Click'
-    action.payload = 'Please'
-    actions.append(action)
+    for reply in replies:
+        actions.append(smooch.Action(type='postback', text=reply, payload=reply))
 
     items = []
-    for body in list:
-        items.append(smooch.MessageItem(title=body, actions=actions))
+    for item in list:
+        items.append(smooch.MessageItem(title=item, actions=actions))
 
     message.items = items
     return message
 
-def postList(list):
+def postList(list, replies):
     message = smooch.MessagePost(role='appMaker', type='list')
 
     actions = []
-    action = smooch.Action()
-    action.type = 'postback'
-    action.text = 'Click'
-    action.payload = 'Thanks'
-    actions.append(action)
+    for reply in replies:
+        actions.append(smooch.Action(type='postback', text=reply, payload=reply))
 
     items = []
-    for body in list:
-        items.append(smooch.MessageItem(title=body, actions=actions))
+    for item in list:
+        items.append(smooch.MessageItem(title=item, actions=actions))
 
     message.items = items
     return message
@@ -115,10 +114,11 @@ def parse_request_data(request_data):
 
     # Generate api response
     api_response = api_instance.post_message(APP_ID, user_id, postText("Hi mate"))
+    api_response = api_instance.post_message(APP_ID, user_id, postTextWithReplies("Hi mate", ['Yes', 'Maybe', 'No']))
     api_response = api_instance.post_message(APP_ID, user_id, postImage("http://www.truthandcharityforum.org/wp-content/uploads/2015/06/bible.jpg"))
     api_response = api_instance.post_message(APP_ID, user_id, postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
-    api_response = api_instance.post_message(APP_ID, user_id, postCarousel(['Happy', 'Ok', 'Sad']))
-    api_response = api_instance.post_message(APP_ID, user_id, postList(['Win', 'Draw', 'Lose']))
+    api_response = api_instance.post_message(APP_ID, user_id, postCarousel(['Happy', 'Ok', 'Sad'], ['Go']))
+    api_response = api_instance.post_message(APP_ID, user_id, postList(['Win', 'Draw', 'Lose'], ['Go']))
 
 @app.route('/messages', methods=["POST"])
 def handle_messages():
