@@ -78,30 +78,30 @@ def postFile(uri):
 
     return message
 
-def postCarousel(list, replies):
+def postCarousel(list):
     message = smooch.MessagePost(role='appMaker', type='carousel')
-
-    actions = []
-    for reply in replies:
-        actions.append(smooch.Action(type='postback', text=reply, payload=reply))
 
     items = []
     for item in list:
-        items.append(smooch.MessageItem(title=item, actions=actions))
+        actions = []
+        actions.append(smooch.Action(type='postback', text=item, payload=item))
+
+        part = smooch.MessageItem(title=item, actions=actions)
+        items.append(part)
 
     message.items = items
     return message
 
-def postList(list, replies):
+def postList(list):
     message = smooch.MessagePost(role='appMaker', type='list')
-
-    actions = []
-    for reply in replies:
-        actions.append(smooch.Action(type='postback', text=reply, payload=reply))
 
     items = []
     for item in list:
-        items.append(smooch.MessageItem(title=item, actions=actions))
+        actions = []
+        actions.append(smooch.Action(type='postback', text=item, payload=item))
+
+        part = smooch.MessageItem(title=item, actions=actions)
+        items.append(part)
 
     message.items = items
     return message
@@ -115,29 +115,45 @@ def parse_request_data(request_data):
     for message in body['messages']:
         text = message['text']
 
-        if text == "Hi":
+        if text == "Help":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Just say Hi, we can talk about Jesus or Money."))
+
+        elif text == "Hello" or text == "Hey" or text == "Hi":
             api_response = api_instance.post_message(APP_ID, user_id,
                 postTextWithReplies("What do you want to chat about?", ['Jesus', 'Money', 'Rachel']))
 
         ### JESUS ###
         elif text == "Jesus":
             api_response = api_instance.post_message(APP_ID, user_id,
-                postImage("http://www.truthandcharityforum.org/wp-content/uploads/2015/06/bible.jpg"))
+                postCarousel(['Christmas', 'Easter', 'Talk']))
+
+        elif text == "Christmas":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Are you happy to give your no?"))
+
+        elif text == "Easter":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Are you happy to give your no?"))
+
+        elif text == "Talk":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Are you happy to give your no?"))
 
         ### MONEY ###
         elif text == "Money":
             api_response = api_instance.post_message(APP_ID, user_id,
-                postCarousel(['Plan Budget', 'Log Spending', 'Help Now'], ['Go']))
+                postCarousel(['Budgeting', 'Spending', 'Talk']))
 
-        elif text == "Plan Budget":
+        elif text == "Budgeting":
             api_response = api_instance.post_message(APP_ID, user_id,
                 postText("Are you happy to give your no?"))
 
-        elif text == "Log Spending":
+        elif text == "Spending":
             api_response = api_instance.post_message(APP_ID, user_id,
                 postText("Are you happy to give your no?"))
 
-        elif text == "Help Now":
+        elif text == "Talk":
             api_response = api_instance.post_message(APP_ID, user_id,
                 postText("Are you happy to give your no?"))
 
