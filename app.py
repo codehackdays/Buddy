@@ -52,6 +52,15 @@ def ping():
 def postText(body):
     message = smooch.MessagePost(role='appMaker', type='text')
     message.text = body
+
+    actions = []
+    action = smooch.Action()
+    action.type = 'reply'
+    action.text = 'Click'
+    action.payload = 'Thanks'
+    actions.append(action)
+
+    message.actions = actions
     return message
 
 def postImage(uri):
@@ -64,20 +73,38 @@ def postFile(uri):
     message.media_url = uri
     return message
 
-def postLocation(mapLat, mapLong):
-    message = smooch.MessagePost(role='appMaker', type='location')
-    message.lat = mapLat
-    message.long = mapLong
-    return message
-
-def postCarousel(body):
+def postCarousel(list):
     message = smooch.MessagePost(role='appMaker', type='carousel')
-    message.items = body
+
+    actions = []
+    action = smooch.Action()
+    action.type = 'postback'
+    action.text = 'Click'
+    action.payload = 'Please'
+    actions.append(action)
+
+    items = []
+    for body in list:
+        items.append(smooch.MessageItem(title=body, actions=actions))
+
+    message.items = items
     return message
 
-def postList(body):
+def postList(list):
     message = smooch.MessagePost(role='appMaker', type='list')
-    message.items = body
+
+    actions = []
+    action = smooch.Action()
+    action.type = 'postback'
+    action.text = 'Click'
+    action.payload = 'Thanks'
+    actions.append(action)
+
+    items = []
+    for body in list:
+        items.append(smooch.MessageItem(title=body, actions=actions))
+
+    message.items = items
     return message
 
 def parse_request_data(request_data):
@@ -90,9 +117,8 @@ def parse_request_data(request_data):
     api_response = api_instance.post_message(APP_ID, user_id, postText("Hi mate"))
     api_response = api_instance.post_message(APP_ID, user_id, postImage("http://www.truthandcharityforum.org/wp-content/uploads/2015/06/bible.jpg"))
     api_response = api_instance.post_message(APP_ID, user_id, postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
-    api_response = api_instance.post_message(APP_ID, user_id, postLocation("51.5185582","-0.1041283"))
-    api_response = api_instance.post_message(APP_ID, user_id, postCarousel("[]"))
-    api_response = api_instance.post_message(APP_ID, user_id, postList("[]"))
+    api_response = api_instance.post_message(APP_ID, user_id, postCarousel(['Happy', 'Ok', 'Sad']))
+    api_response = api_instance.post_message(APP_ID, user_id, postList(['Win', 'Draw', 'Lose']))
 
 @app.route('/messages', methods=["POST"])
 def handle_messages():
