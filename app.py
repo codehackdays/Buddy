@@ -137,7 +137,7 @@ def handle_message(user_id, text):
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Are you happy to share your no?"))
 
-    elif text == "Hello" or text == "Hey" or text == "Hi":
+    elif text == "Hello" or text == "Hey" or text == "Hi" or text == "hello" or text == "hey" or text == "hi":
         api_response = api_instance.post_message(APP_ID, user_id,
             postTextWithReplies("What do you want to chat about?", ['Jesus', 'Money', 'Rachel']))
 
@@ -161,11 +161,28 @@ def handle_message(user_id, text):
 
     elif text == "Budgeting":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Are you happy to give your no?"))
+            postTextWithReplies("What kind of budgeting have you done?", ['Regular Budget', 'Weekly Allowance Budget']))
 
     elif text == "Spending":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Are you happy to give your no?"))
+            postTextWithReplies("What kind of spending have you done?", ['Regular Spend', 'Weekly Allowance Spend']))
+
+    ### BUDGET ###
+    elif text == "Regular Budget":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much?"))
+
+    elif text == "Weekly Allowance Budget":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much?"))
+
+    elif text == "Regular Spend":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much?"))
+
+    elif text == "Weekly Allowance Spend":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much?"))
 
     ### RACHEL ###
     elif text == "Rachel":
