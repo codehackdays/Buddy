@@ -49,8 +49,9 @@ app_create_body = smooch.AppCreate() # AppCreate | Body for a createApp request.
 # PING
 @app.route('/')
 def ping():
-    count = redis.incr('hits')
-    return 'Hello World! I have been seen {} times.\n'.format(count)
+    # Pull all database data and log on screen
+    all_messages = json.dumps([eval(redis.get(key).decode('utf8')) for key in redis.scan_iter("messages-*")])
+    return Response(all_messages, status=200)
 
 def postText(text):
     message = smooch.MessagePost(role='appMaker', type='text')
@@ -172,10 +173,35 @@ def parse_request_data(request_data):
         else:
             api_response = api_instance.post_message(APP_ID, user_id,
                 postText("I haven't learned that one yet"))
+    '''
+    # Persist message to database
+    author_id = body['messages'][0]['authorId']
+    message = body['messages'][0]['text']
+    persistence_data = None
+    existing_author_info = None
+
+    # if key exists then load its data
+    if db.key_exists(author_id):
+        existing_author_db_data = db.load_messages(author_id)
+        existing_author_info = json.loads(existing_author_db_data)
+        db.delete_messages(author_id) # remove key since its being retrieved and stored in memory
+    
+    # Update db key if pre-existing
+    if isinstance(existing_author_info, (list)):
+        existing_author_info.append(message) # Problem here as it overrites list
+        persistence_data = json.dumps(existing_author_info)
+        print(persistence_data)
+        # perhaps delete that exists since we have retrieved its data in memory?
+    else:
+        persistence_data = json.dumps([message])
+    
+    # Then finally save...
+    db.save_message(author_id, persistence_data)
+    '''
 
 @app.route('/messages', methods=["POST"])
 def handle_messages():
-    print(request.get_json())
+    # print(request.get_json())
     # Delay bot response and return immediate response
     # to 'fix' facebook issue - https://chatbotsmagazine.com/listicle-of-things-missing-from-facebook-messenger-chatbot-platforms-documentation-d1d50922ef15
     Promise.resolve(parse_request_data(request.get_data()))

@@ -8,7 +8,10 @@ class Persistence():
         self.db.set('messages-' + _id, message)
 
     def delete_messages(self, _id):
-        pass
+        self.db.delete('messages-' + _id)
+
+    def key_exists(self, _id):
+        return self.db.exists('messages-' + _id)
 
     def load_messages(self, _id):
         return self.db.get('messages-' + _id)
