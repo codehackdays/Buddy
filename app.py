@@ -86,6 +86,17 @@ def postTextWithReplies(text, replies):
     message.actions = actions
     return message
 
+def postTextWithListReplies(text, replies):
+    message = smooch.MessagePost(role='appMaker', type='text')
+    message.text = text
+
+    actions = []
+    for reply in replies:
+        actions.append(smooch.Action(type='postback', text=reply, payload=reply))
+
+    message.actions = actions
+    return message
+
 def postImage(uri):
     message = smooch.MessagePost(role='appMaker', type='image')
     message.media_url = uri
@@ -165,28 +176,64 @@ def handle_message(user_id, text):
 
     elif text == "Budgeting":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postTextWithReplies("Are you happy to tell me about your budget?", ['Regular Budget', 'Weekly Allowance Budget']))
+            postTextWithListReplies("Are you happy to tell me about your budget?", ['Regular Budget', 'Weekly Allowance Budget']))
 
     elif text == "Spending":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postTextWithReplies("Are you happy to tell me about your savings?", ['Regular Spend', 'Weekly Allowance Spend']))
+            postTextWithListReplies("Are you happy to tell me about your spend?", ['Regular Spend', 'Weekly Allowance Spend']))
 
     ### BUDGET ###
     elif text == "Regular Budget":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Got it! How much?"))
+            postText("Got it!"))
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Ok, how much is your rent or mortgage?"))
 
     elif text == "Weekly Allowance Budget":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Got it! How much?"))
+            postText("Got it!"))
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Ok, how much is your weekly allowance budget?"))
 
     elif text == "Regular Spend":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Got it! How much?"))
+            postText("Got it! How much did you spend?"))
 
     elif text == "Weekly Allowance Spend":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postText("Got it! How much?"))
+            postTextWithListReplies("Got it! What did you spend money on?", ['Home', 'Living', 'Travel', 'Family', 'Leisure', 'Future', 'Giving', 'Repayments']))
+
+    elif text == "Home":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Living":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Travel":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Family":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Leisure":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Future":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Giving":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
+
+    elif text == "Repayments":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Got it! How much did you spend?"))
 
     elif text == "Yes please":
         api_response = api_instance.post_message(APP_ID, user_id,
@@ -238,7 +285,7 @@ def parse_request_data(request_data):
 
     elif body['trigger'] == 'postback':
         for postback in body['postbacks']:
-            handle_message(user_id, postback['action']['text'])
+            handle_message(user_id, postback['action']['payload'])
 
     '''
     # Persist message to database
