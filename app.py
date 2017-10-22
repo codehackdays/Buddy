@@ -137,9 +137,13 @@ def handle_message(user_id, text):
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Are you happy to share your no?"))
 
-    elif text == "Hello" or text == "Hey" or text == "Hi" or text == "hello" or text == "hey" or text == "hi":
+    elif text == "Hello" or text == "Hey" or text == "Hi":
         api_response = api_instance.post_message(APP_ID, user_id,
             postTextWithReplies("What do you want to chat about?", ['Jesus', 'Money', 'Rachel']))
+
+    elif text == "hello" or text == "hey" or text == "hi":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postTextWithReplies("How do you feel about money?", [':D',':)',':(',':@']))
 
     ### JESUS ###
     elif text == "Jesus":
@@ -213,8 +217,6 @@ def handle_message(user_id, text):
     else:
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("I haven't learned that one yet"))
-        api_response = api_instance.post_message(APP_ID, user_id,
-            postTextWithReplies("How do you feel about money?", [':D',':)',':(',':@']))
 
 # Request handling logic
 def parse_request_data(request_data):
