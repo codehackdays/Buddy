@@ -189,6 +189,23 @@ def handle_message(user_id, text):
         api_response = api_instance.post_message(APP_ID, user_id,
             postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
 
+    ### EMOJI ###
+    elif text == ":D":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Have you thought about helping other people cope better? https://capuk.org"))
+
+    elif text == ":)":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("Have you thought about helping other people cope better? https://capuk.org"))
+
+    elif text == ":(":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("You're not alone!"))
+
+    elif text == ":@":
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postText("You're not alone!"))
+
     elif text == "":
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("Speachless"))
@@ -196,6 +213,8 @@ def handle_message(user_id, text):
     else:
         api_response = api_instance.post_message(APP_ID, user_id,
             postText("I haven't learned that one yet"))
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postTextWithReplies("How do you feel about money?", [':D',':)',':(',':@']))
 
 # Request handling logic
 def parse_request_data(request_data):
