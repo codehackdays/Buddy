@@ -125,20 +125,6 @@ def postCarousel(list):
     message.items = items
     return message
 
-def postList(list):
-    message = smooch.MessagePost(role='appMaker', type='list')
-
-    items = []
-    for item in list:
-        actions = []
-        actions.append(smooch.Action(type='postback', text=item, payload=item))
-
-        part = smooch.MessageItem(title=item, actions=actions)
-        items.append(part)
-
-    message.items = items
-    return message
-
 def handle_message(user_id, text):
     if text == "Help":
         api_response = api_instance.post_message(APP_ID, user_id,
@@ -201,7 +187,9 @@ def handle_message(user_id, text):
 
     elif text == "Weekly Allowance Spend":
         api_response = api_instance.post_message(APP_ID, user_id,
-            postTextWithListReplies("Got it! What did you spend money on?", ['Home', 'Living', 'Travel', 'Family', 'Leisure', 'Future', 'Giving', 'Repayments']))
+            postText("Got it! What did you spend money on?"))
+        api_response = api_instance.post_message(APP_ID, user_id,
+            postCarousel(['Home', 'Living', 'Travel', 'Family', 'Leisure', 'Future', 'Giving', 'Repayments']))
 
     elif text == "Home":
         api_response = api_instance.post_message(APP_ID, user_id,
