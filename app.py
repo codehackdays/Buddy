@@ -112,13 +112,47 @@ def parse_request_data(request_data):
     # print(body['appUser'])
     user_id = body['appUser']['_id']
 
-    # Generate api response
-    api_response = api_instance.post_message(APP_ID, user_id, postText("Hi mate"))
-    api_response = api_instance.post_message(APP_ID, user_id, postTextWithReplies("Hi mate", ['Yes', 'Maybe', 'No']))
-    api_response = api_instance.post_message(APP_ID, user_id, postImage("http://www.truthandcharityforum.org/wp-content/uploads/2015/06/bible.jpg"))
-    api_response = api_instance.post_message(APP_ID, user_id, postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
-    api_response = api_instance.post_message(APP_ID, user_id, postCarousel(['Happy', 'Ok', 'Sad'], ['Go']))
-    api_response = api_instance.post_message(APP_ID, user_id, postList(['Win', 'Draw', 'Lose'], ['Go']))
+    for message in body['messages']:
+        text = message['text']
+
+        if text == "Hi":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postTextWithReplies("What do you want to chat about?", ['Jesus', 'Money', 'Rachel']))
+
+        ### JESUS ###
+        elif text == "Jesus":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postImage("http://www.truthandcharityforum.org/wp-content/uploads/2015/06/bible.jpg"))
+
+        ### MONEY ###
+        elif text == "Money":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postCarousel(['Plan Budget', 'Log Spending', 'Help Now'], ['Go']))
+
+        elif text == "Plan Budget":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Are you happy to give your no?"))
+
+        elif text == "Log Spending":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Are you happy to give your no?"))
+
+        elif text == "Help Now":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Are you happy to give your no?"))
+
+        ### RACHEL ###
+        elif text == "Rachel":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postFile("http://rachelschallenge.org/media/media_press_kit/Code_of_ethics.pdf"))
+
+        elif text == "":
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("Speachless"))
+
+        else:
+            api_response = api_instance.post_message(APP_ID, user_id,
+                postText("I haven't learned that one yet"))
 
 @app.route('/messages', methods=["POST"])
 def handle_messages():
